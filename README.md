@@ -1,4 +1,4 @@
-## React Web Template
+## React web frontend template
 
 References
 

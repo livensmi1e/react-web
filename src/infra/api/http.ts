@@ -1,7 +1,6 @@
-// infra/api/http.ts
 import axios from "axios";
-import { setupInterceptors } from "./interceptor";
-import { handleApiError } from "./handler";
+import { setupInterceptors } from "@/infra/api/interceptor";
+import { handleApiError } from "@/infra/api/handler";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api",

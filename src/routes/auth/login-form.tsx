@@ -15,6 +15,9 @@ import {
 } from "@/shared/components/ui/form";
 import { toast } from "sonner";
 import { Link } from "react-router";
+import { useLogin } from "@/app/hooks/auth";
+import { useAuthStore } from "@/infra/store/auth";
+import { useNavigate } from "react-router";
 
 const LoginSchema = z.object({
   email: z.email(),
@@ -31,11 +34,24 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
       password: "",
     },
   });
+  const navigate = useNavigate();
+  const { mutate: login, isPending } = useLogin({
+    onSuccess(data) {
+      toast.success("Login successful", {
+        description: `Welcome back, ${data.user.name || data.user.email}`,
+      });
+      useAuthStore.getState().setAuth(data.token, data.user);
+      navigate("/");
+    },
+    onError(error) {
+      console.log(error);
+      toast.error("Login failed", {
+        description: "Please check your email and password.",
+      });
+    },
+  });
   function onSubmit(values: z.infer<typeof LoginSchema>) {
-    console.log(values);
-    toast.success("Event has been created", {
-      description: "Sunday, December 03, 2023 at 9:00 AM",
-    });
+    login(values);
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -88,8 +104,8 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full">
-                    Login
+                  <Button type="submit" className="w-full" disabled={isPending}>
+                    {isPending ? "Logging in..." : "Login"}
                   </Button>
                 </form>
               </Form>

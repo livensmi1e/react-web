@@ -1,13 +1,15 @@
-const TOKEN_KEY = "access_token";
+import { useAuthStore } from "@/infra/store/auth";
 
 export const TokenStorage = {
-  get: (): string | null => localStorage.getItem(TOKEN_KEY),
+  get: (): string | null => {
+    return useAuthStore.getState().token;
+  },
 
   save: (token: string): void => {
-    localStorage.setItem(TOKEN_KEY, token);
+    useAuthStore.setState({ token });
   },
 
   clear: (): void => {
-    localStorage.removeItem(TOKEN_KEY);
+    useAuthStore.getState().clearAuth();
   },
 };
