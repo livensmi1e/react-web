@@ -13,6 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/shared/components/ui/form";
+import { toast } from "sonner";
 
 const LoginSchema = z.object({
   email: z.email(),
@@ -31,12 +32,15 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   });
   function onSubmit(values: z.infer<typeof LoginSchema>) {
     console.log(values);
+    toast.success("Event has been created", {
+      description: "Sunday, December 03, 2023 at 9:00 AM",
+    });
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <div className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -129,7 +133,7 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                 </a>
               </div>
             </div>
-          </form>
+          </div>
           <div className="bg-muted relative hidden md:block">
             <img
               src="/vite.svg"
