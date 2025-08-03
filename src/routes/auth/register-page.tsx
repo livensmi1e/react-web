@@ -1,5 +1,7 @@
-function Register() {
-  return <p>Register</p>;
+import RegisterForm from "./register-form";
+
+function LoginPage() {
+  return <RegisterForm />;
 }
 
-export default Register;
+export default LoginPage;

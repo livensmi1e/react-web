@@ -16,22 +16,22 @@ import {
 import { toast } from "sonner";
 import { Link } from "react-router";
 
-const LoginSchema = z.object({
+const RegisterSchema = z.object({
   email: z.email(),
   password: z.string().min(2, {
     message: "Password must be at least 2 characters.",
   }),
 });
 
-function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof LoginSchema>) {
+  function onSubmit(values: z.infer<typeof RegisterSchema>) {
     console.log(values);
     toast.success("Event has been created", {
       description: "Sunday, December 03, 2023 at 9:00 AM",
@@ -44,9 +44,9 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
           <div className="p-6 md:p-8">
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
-                <h1 className="text-2xl font-bold">Welcome back</h1>
+                <h1 className="text-2xl font-bold">Welcome newcomers</h1>
                 <p className="text-muted-foreground text-balance">
-                  Login to your Acme Inc account
+                  Sign up your Acme Inc account
                 </p>
               </div>
               <Form {...form}>
@@ -89,7 +89,7 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                     )}
                   />
                   <Button type="submit" className="w-full">
-                    Login
+                    Sign up
                   </Button>
                 </form>
               </Form>
@@ -106,7 +106,7 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Login with Apple</span>
+                  <span className="sr-only">Sign up with Apple</span>
                 </Button>
                 <Button variant="outline" type="button" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -115,7 +115,7 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Login with Google</span>
+                  <span className="sr-only">Sign up with Google</span>
                 </Button>
                 <Button variant="outline" type="button" className="w-full">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -124,13 +124,13 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
                       fill="currentColor"
                     />
                   </svg>
-                  <span className="sr-only">Login with Meta</span>
+                  <span className="sr-only">Sign up with Meta</span>
                 </Button>
               </div>
               <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link to="/signup" className="underline underline-offset-4">
-                  Sign up
+                Aleady have an account?{" "}
+                <Link to="/login" className="underline underline-offset-4">
+                  Login
                 </Link>
               </div>
             </div>
@@ -152,4 +152,4 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export default LoginForm;
+export default RegisterForm;
