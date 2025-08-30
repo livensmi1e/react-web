@@ -1,9 +1,9 @@
-import { LoginRequest } from "@/infra/api/auth";
+import { LoginRequestBody } from "@/infra/api/handlers/auth";
 import { http, HttpResponse, delay } from "msw";
 
 export const authHandler = [
   http.post("http://localhost:8000/api/auth/login", async ({ request }) => {
-    const { email, password } = (await request.json()) as LoginRequest;
+    const { email, password } = (await request.json()) as LoginRequestBody;
     await delay(1000);
     if (email === "dangquocbao9504@gmail.com" && password === "abc") {
       return HttpResponse.json(

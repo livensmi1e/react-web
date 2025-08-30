@@ -15,7 +15,7 @@ import {
 } from "@/shared/components/ui/form";
 import { toast } from "sonner";
 import { Link } from "react-router";
-import { useLogin } from "@/app/hooks/auth";
+import { useLogin } from "@/infra/query/hooks/auth";
 import { useAuthStore } from "@/infra/store/auth";
 import { useNavigate } from "react-router";
 
@@ -36,11 +36,12 @@ function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   });
   const navigate = useNavigate();
   const { mutate: login, isPending } = useLogin({
-    onSuccess(data) {
+    onSuccess(payload) {
+      const data = payload.data;
       toast.success("Login successful", {
-        description: `Welcome back, ${data.user.name || data.user.email}`,
+        description: "Welcome back, my friend!",
       });
-      useAuthStore.getState().setAuth(data.token, data.user);
+      useAuthStore.getState().setAuth(data.token, null);
       navigate("/");
     },
     onError(error) {

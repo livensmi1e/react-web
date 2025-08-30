@@ -1,13 +1,19 @@
 import { User } from "@/domain/models/user";
-import { LoginRequest, LoginResponse } from "@/infra/api/auth";
+import {
+  LoginRequestBody,
+  LoginResponseBody,
+  RegisterRequestBody,
+  RegisterResponseBody,
+} from "@/infra/api/handlers/auth";
 
 export interface AuthService {
-  login(payload: LoginRequest): Promise<LoginResponse>;
+  login(payload: LoginRequestBody): Promise<LoginResponseBody>;
+  register(payload: RegisterRequestBody): Promise<RegisterResponseBody>;
 }
 
 export interface AuthState {
   token: string | null;
   user: User | null;
-  setAuth: (token: string, user: User) => void;
+  setAuth: (token: string, user: User | null) => void;
   clearAuth: () => void;
 }

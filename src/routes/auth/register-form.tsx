@@ -14,14 +14,23 @@ import {
   FormMessage,
 } from "@/shared/components/ui/form";
 import { toast } from "sonner";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useRegister } from "@/infra/query/hooks/auth";
 
-const RegisterSchema = z.object({
-  email: z.email(),
-  password: z.string().min(2, {
-    message: "Password must be at least 2 characters.",
-  }),
-});
+const RegisterSchema = z
+  .object({
+    email: z.email(),
+    password: z.string().min(2, {
+      message: "Password must be at least 2 characters.",
+    }),
+    confirmPassword: z.string().min(2, {
+      message: "Confirm Password must be at least 2 characters.",
+    }),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
   const form = useForm<z.infer<typeof RegisterSchema>>({
@@ -29,12 +38,29 @@ function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
+  const navigate = useNavigate();
+  const { mutate: register, isPending } = useRegister({
+    onSuccess() {
+      toast.success("Registration successful", {
+        description: "You can log in with your new account.",
+      });
+      navigate("/login");
+    },
+    onError(error) {
+      console.log(error);
+      toast.error("Registration failed", {
+        description: "Please check your email and password.",
+      });
+    },
+  });
+
   function onSubmit(values: z.infer<typeof RegisterSchema>) {
-    console.log(values);
-    toast.success("Event has been created", {
-      description: "Sunday, December 03, 2023 at 9:00 AM",
+    register({
+      email: values.email,
+      password: values.password,
     });
   }
   return (
@@ -72,15 +98,7 @@ function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
                     name="password"
                     render={({ field }) => (
                       <FormItem className="grid gap-3">
-                        <div className="flex items-center">
-                          <FormLabel>Password</FormLabel>
-                          <Link
-                            to="#"
-                            className="ml-auto text-sm underline-offset-2 hover:underline"
-                          >
-                            Forgot your password?
-                          </Link>
-                        </div>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input {...field} />
                         </FormControl>
@@ -88,8 +106,21 @@ function RegisterForm({ className, ...props }: React.ComponentProps<"div">) {
                       </FormItem>
                     )}
                   />
-                  <Button type="submit" className="w-full">
-                    Sign up
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem className="grid gap-3">
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="w-full" disabled={isPending}>
+                    {isPending ? "Creating account..." : "Sign Up"}
                   </Button>
                 </form>
               </Form>

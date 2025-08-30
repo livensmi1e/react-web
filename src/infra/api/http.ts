@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setupInterceptors } from "@/infra/api/interceptor";
-import { handleApiError } from "@/infra/api/handler";
+import { handleApiError } from "@/infra/api/error";
 
 const axiosInstance = axios.create({
   baseURL: "http://localhost:8000/api",
