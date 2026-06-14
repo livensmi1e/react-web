@@ -7,13 +7,16 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
+ARG VITE_API_BASE_URL=/api
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 COPY . .
 RUN yarn build
 
 FROM nginx:1.29.0-alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
-# COPY web-server/nginx.conf /etc/nginx/nginx.conf
+COPY web-server/default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 

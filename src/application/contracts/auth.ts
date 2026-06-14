@@ -1,4 +1,3 @@
-import { http } from "@/infra/api/http";
 import { User } from "@/domain/models/user";
 
 export type LoginRequestBody = {
@@ -16,12 +15,6 @@ export type LoginResponseBody = {
   statusCode: number;
 };
 
-export async function login(
-  payload: LoginRequestBody,
-): Promise<LoginResponseBody> {
-  return http.post<LoginResponseBody>("/auth/login", payload);
-}
-
 export type RegisterRequestBody = {
   email: string;
   password: string;
@@ -37,8 +30,14 @@ export type RegisterResponseBody = {
   statusCode: number;
 };
 
-export async function register(
-  payload: RegisterRequestBody,
-): Promise<RegisterResponseBody> {
-  return http.post<RegisterResponseBody>("/auth/register", payload);
+export interface AuthService {
+  login(payload: LoginRequestBody): Promise<LoginResponseBody>;
+  register(payload: RegisterRequestBody): Promise<RegisterResponseBody>;
+}
+
+export interface AuthState {
+  token: string | null;
+  user: User | null;
+  setAuth: (token: string, user: User | null) => void;
+  clearAuth: () => void;
 }

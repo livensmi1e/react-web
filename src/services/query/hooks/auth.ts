@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { authService } from "@/app/services/auth";
+import { authService } from "@/services/api/auth";
 import type {
   LoginRequestBody,
   LoginResponseBody,
   RegisterRequestBody,
   RegisterResponseBody,
-} from "@/infra/api/handlers/auth";
+} from "@/application/contracts/auth";
 
 export function useLogin(options?: {
   onSuccess?: (data: LoginResponseBody) => void;
@@ -13,6 +13,7 @@ export function useLogin(options?: {
 }) {
   return useMutation<LoginResponseBody, unknown, LoginRequestBody>({
     mutationFn: authService.login,
+    retry: false,
     ...options,
   });
 }
@@ -23,6 +24,7 @@ export function useRegister(options?: {
 }) {
   return useMutation<RegisterResponseBody, unknown, RegisterRequestBody>({
     mutationFn: authService.register,
+    retry: false,
     ...options,
   });
 }

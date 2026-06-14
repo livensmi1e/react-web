@@ -1,9 +1,9 @@
 import axios from "axios";
-import { setupInterceptors } from "@/infra/api/interceptor";
-import { handleApiError } from "@/infra/api/error";
+import { setupInterceptors } from "@/services/api/interceptor";
+import { toAppError } from "@/services/api/error";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? "/api",
   headers: {
     "Content-Type": "application/json",
   },
@@ -17,8 +17,7 @@ export const http = {
       const res = await axiosInstance.get<T>(url);
       return res.data;
     } catch (err) {
-      handleApiError(err);
-      throw err;
+      throw toAppError(err);
     }
   },
 
@@ -27,8 +26,7 @@ export const http = {
       const res = await axiosInstance.post<T>(url, body);
       return res.data;
     } catch (err) {
-      handleApiError(err);
-      throw err;
+      throw toAppError(err);
     }
   },
 
@@ -37,8 +35,7 @@ export const http = {
       const res = await axiosInstance.patch<T>(url, body);
       return res.data;
     } catch (err) {
-      handleApiError(err);
-      throw err;
+      throw toAppError(err);
     }
   },
 
@@ -47,8 +44,7 @@ export const http = {
       const res = await axiosInstance.delete<T>(url);
       return res.data;
     } catch (err) {
-      handleApiError(err);
-      throw err;
+      throw toAppError(err);
     }
   },
 };

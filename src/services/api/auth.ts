@@ -1,19 +1,18 @@
-import type { AuthService } from "@/app/ports/auth";
-import {
-  login as loginApi,
+import type {
+  AuthService,
   LoginRequestBody,
   LoginResponseBody,
-  register as callRegisterApi,
   RegisterRequestBody,
   RegisterResponseBody,
-} from "@/infra/api/handlers/auth";
+} from "@/application/contracts/auth";
+import { http } from "@/services/api/http";
 
 export const authService: AuthService = {
   login(payload: LoginRequestBody): Promise<LoginResponseBody> {
-    return loginApi(payload);
+    return http.post<LoginResponseBody>("/auth/login", payload);
   },
 
   register(payload: RegisterRequestBody): Promise<RegisterResponseBody> {
-    return callRegisterApi(payload);
+    return http.post<RegisterResponseBody>("/auth/register", payload);
   },
 };

@@ -6,7 +6,7 @@ import HomePage from "@/routes/home/home-page";
 import ProtectedRoute from "@/shared/components/layout/protected-route";
 import AppLayout from "@/shared/components/layout/app-layout";
 import PublicRoute from "@/shared/components/layout/public-route";
-import { Toaster } from "sonner";
+import { Toaster } from "@/shared/components/ui/sonner";
 
 export const AppRoutes = () => {
   return (
@@ -26,7 +26,7 @@ export const AppRoutes = () => {
         </Route>
       </Routes>
 
-      <Toaster richColors closeButton position="top-right" />
+      <Toaster closeButton position="top-right" />
     </>
   );
 };

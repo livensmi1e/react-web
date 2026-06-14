@@ -1,5 +1,5 @@
-import { Outlet } from "react-router";
-import { Map } from "lucide-react";
+import { Outlet, useNavigate } from "react-router";
+import { Activity, LogOut, Terminal, User } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,46 +8,64 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
-import { User, LogOut } from "lucide-react";
-import { AuroraText } from "@/shared/components/magicui/aurora-text";
+import { clearAuthSession, useAuthStore } from "@/services/store/auth";
 
 function AppLayout() {
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+
+  function handleLogout() {
+    clearAuthSession();
+    navigate("/login", { replace: true });
+  }
+
   return (
-    <div className="relative flex flex-col min-h-screen bg-[#fcfcfc] dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-hidden">
-      <header className=" bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 left-0 z-30">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Map className="h-6 w-6 text-[#00A2E5]" />
-            <AuroraText className="text-xl font-bold" speed={2}>
-              Vehicle Tracking
-            </AuroraText>
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-background text-foreground">
+      <header className="sticky top-0 left-0 z-30 border-b border-terminal-border bg-background/85 backdrop-blur">
+        <div className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-5 md:px-8">
+          <div className="flex items-center gap-3">
+            <div className="flex size-7 items-center justify-center border border-terminal-border bg-terminal-surface">
+              <Terminal className="size-4 text-primary" />
+            </div>
+            <div>
+              <div className="text-sm font-medium text-terminal-fg">fx</div>
+              <div className="text-[11px] leading-none text-terminal-dim">
+                weekend production template
+              </div>
+            </div>
+          </div>
+          <div className="hidden items-center gap-2 text-xs text-terminal-muted sm:flex">
+            <Activity className="size-3.5 text-primary" />
+            <span>local stack ready</span>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="secondary"
                 size="icon"
-                className="rounded-full focus-visible:ring-0"
+                className="border border-terminal-border bg-terminal-surface hover:bg-accent focus-visible:ring-0"
                 type="button"
               >
-                <User className="h-5 w-5" />
+                <User className="size-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-32">
+            <DropdownMenuContent align="end" className="w-36">
               <DropdownMenuItem disabled>
-                <User className="mr-2 h-4 w-4" />
-                <span className="font-medium">livensmi1e</span>
+                <User className="mr-2 size-4" />
+                <span className="truncate font-medium">
+                  {user?.name ?? user?.email ?? "developer"}
+                </span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive">
-                <LogOut className="mr-2 h-4 w-4" />
+              <DropdownMenuItem variant="destructive" onSelect={handleLogout}>
+                <LogOut className="mr-2 size-4" />
                 <span>Logout</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </header>
-      <main className="z-30 flex-1 w-full max-w-screen-2xl mx-auto p-4 sm:px-6 lg:px-8">
+      <main className="z-10 mx-auto w-full max-w-5xl flex-1 px-5 py-10 md:px-8 md:py-16">
         <Outlet />
       </main>
     </div>
